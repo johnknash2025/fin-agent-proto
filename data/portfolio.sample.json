@@ -1,0 +1,12 @@
+{
+  "as_of": "2025-09-01",
+  "currency": "USD",
+  "cash": 15000,
+  "positions": [
+    { "symbol": "AAPL", "quantity": 120, "cost_basis_per_share": 140.0 },
+    { "symbol": "MSFT", "quantity": 80,  "cost_basis_per_share": 260.0 },
+    { "symbol": "NVDA", "quantity": 40,  "cost_basis_per_share": 420.0 },
+    { "symbol": "VOO",  "quantity": 50,  "cost_basis_per_share": 380.0 }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "as_of": "2025-09-01",
+  "quotes": [
+    { "symbol": "AAPL", "price": 195.20 },
+    { "symbol": "MSFT", "price": 430.10 },
+    { "symbol": "NVDA", "price": 880.50 },
+    { "symbol": "VOO",  "price": 482.40 }
+  ]
+}
+

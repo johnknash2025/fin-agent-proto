@@ -1,0 +1,72 @@
+{
+  "report": {
+    "portfolioSummary": {
+      "totalValue": 132172,
+      "totalCost": 73400,
+      "totalPnl": 43772,
+      "totalPnlPct": 0.5963487738419618,
+      "concentration": 0.2664709620797143,
+      "cash": 15000
+    },
+    "positions": [
+      {
+        "symbol": "AAPL",
+        "quantity": 120,
+        "price": 195.2,
+        "mktValue": 23424,
+        "cost": 16800,
+        "pnl": 6624,
+        "pnlPct": 0.3942857142857143
+      },
+      {
+        "symbol": "MSFT",
+        "quantity": 80,
+        "price": 430.1,
+        "mktValue": 34408,
+        "cost": 20800,
+        "pnl": 13608,
+        "pnlPct": 0.6542307692307693
+      },
+      {
+        "symbol": "NVDA",
+        "quantity": 40,
+        "price": 880.5,
+        "mktValue": 35220,
+        "cost": 16800,
+        "pnl": 18420,
+        "pnlPct": 1.0964285714285715
+      },
+      {
+        "symbol": "VOO",
+        "quantity": 50,
+        "price": 482.4,
+        "mktValue": 24120,
+        "cost": 19000,
+        "pnl": 5120,
+        "pnlPct": 0.2694736842105263
+      }
+    ]
+  },
+  "suggestions": [
+    {
+      "type": "take_profit_consideration",
+      "symbol": "AAPL",
+      "pnlPct": 0.3942857142857143
+    },
+    {
+      "type": "take_profit_consideration",
+      "symbol": "MSFT",
+      "pnlPct": 0.6542307692307693
+    },
+    {
+      "type": "take_profit_consideration",
+      "symbol": "NVDA",
+      "pnlPct": 1.0964285714285715
+    },
+    {
+      "type": "take_profit_consideration",
+      "symbol": "VOO",
+      "pnlPct": 0.2694736842105263
+    }
+  ]
+}
