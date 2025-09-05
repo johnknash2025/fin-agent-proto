@@ -42,6 +42,10 @@ echo '{"tool":"get_portfolio","args":{"source":"local"}}' | node server/mcp/inde
   - `NEWSAPI_KEY` for `search_news` with `source=newsapi`
   - `PORTFOLIO_JSON` / `PRICES_JSON` to override local files
 
+### .env support
+- Place a `.env` file in the repo root (see `.env.example`).
+- The MCP stdio runner auto-loads `.env` via `server/env.js` (no external deps).
+
 To replace the stub with the official MCP SDK, add `@modelcontextprotocol/sdk` and wrap the tool functions in a real MCP server. The tool contracts here are stable and intended for direct reuse.
 
 ## Project Layout

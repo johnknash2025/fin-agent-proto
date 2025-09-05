@@ -47,16 +47,36 @@ async function get_quotes(args = {}) {
     const key = process.env.ALPHA_VANTAGE_KEY;
     if (!key) return err(source, 'Missing env ALPHA_VANTAGE_KEY');
     try {
+      const mode = args.mode || 'global'; // 'global' | 'daily'
       const results = [];
       for (const sym of symbols) {
-        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(sym)}&apikey=${key}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        const series = json['Time Series (Daily)'] || {};
-        const last = Object.keys(series).sort().pop();
-        const price = last ? parseFloat(series[last]['4. close']) : null;
-        results.push({ symbol: sym, price, as_of: last || null });
+        let price = null;
+        let as_of = null;
+        if (mode === 'global') {
+          const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(sym)}&apikey=${key}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          const g = json['Global Quote'] || {};
+          price = g['05. price'] ? parseFloat(g['05. price']) : null;
+          as_of = g['07. latest trading day'] || null;
+          if (!price && (json['Note'] || json['Information'] || json['Error Message'])) {
+            return err(source, json['Note'] || json['Information'] || json['Error Message']);
+          }
+        } else {
+          const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(sym)}&apikey=${key}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          const series = json['Time Series (Daily)'] || {};
+          const last = Object.keys(series).sort().pop();
+          price = last ? parseFloat(series[last]['4. close']) : null;
+          as_of = last || null;
+          if (!price && (json['Note'] || json['Information'] || json['Error Message'])) {
+            return err(source, json['Note'] || json['Information'] || json['Error Message']);
+          }
+        }
+        results.push({ symbol: sym, price, as_of });
       }
       return ok(source, { quotes: results });
     } catch (e) {

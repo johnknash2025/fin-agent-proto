@@ -2,6 +2,9 @@
 // Minimal stdio runner for tool functions.
 // This is not the official MCP server, but provides the same tool semantics for local testing.
 
+// Load .env if present (no external deps)
+try { require('../env').config(); } catch {}
+
 const { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus } = require('./tools');
 
 const TOOL_MAP = { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus };
