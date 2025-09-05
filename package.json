@@ -1,0 +1,19 @@
+{
+  "name": "fin-agent-proto",
+  "version": "0.1.0",
+  "private": false,
+  "type": "commonjs",
+  "bin": {
+    "fin-report": "src/cli.js"
+  },
+  "scripts": {
+    "report": "node src/cli.js --data data/portfolio.sample.json --prices data/prices.sample.json --out out",
+    "mcp:stdio": "node server/mcp/index.js stdio",
+    "mcp:test": "node server/mcp/index.js get_quotes --args '{\"symbols\":[\"AAPL\",\"MSFT\"]}'"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
+

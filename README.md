@@ -18,6 +18,26 @@ node src/cli.js --data data/portfolio.sample.json --prices data/prices.sample.js
   - `out/report.md` – human‑readable daily report
   - `out/report.json` – structured metrics and suggestions
 
+## MCP Minimal Tools (Local Stub)
+
+This repo includes minimal MCP‑style tools and a stdio runner (no extra deps). These will be wired to the official MCP SDK later.
+
+- List of tools: `get_portfolio`, `get_quotes`, `search_news`, `get_filings`, `place_order`
+- Run (one‑shot):
+```
+node server/mcp/index.js get_quotes --args '{"symbols":["AAPL","MSFT"],"source":"local"}'
+```
+- Run (stdio):
+```
+echo '{"tool":"get_portfolio","args":{"source":"local"}}' | node server/mcp/index.js stdio
+```
+- Configure env vars for live providers (optional):
+  - `ALPHA_VANTAGE_KEY` for `get_quotes` with `source=alpha_vantage`
+  - `NEWSAPI_KEY` for `search_news` with `source=newsapi`
+  - `PORTFOLIO_JSON` / `PRICES_JSON` to override local files
+
+To replace the stub with the official MCP SDK, add `@modelcontextprotocol/sdk` and wrap the tool functions in a real MCP server. The tool contracts here are stable and intended for direct reuse.
+
 ## Project Layout
 - `src/cli.js` – CLI entry
 - `src/agent/report.js` – metrics + report generation
@@ -37,4 +57,3 @@ node src/cli.js --data data/portfolio.sample.json --prices data/prices.sample.js
 
 ## Disclaimer
 This prototype is for engineering exploration only and is not financial advice. Any trading integration must include explicit user approval, logging, and compliance checks.
-
