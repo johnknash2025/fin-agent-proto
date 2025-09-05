@@ -37,6 +37,15 @@ echo '{"tool":"get_portfolio","args":{"source":"local"}}' | node server/mcp/inde
   - Via MCP tools:
     - `node server/mcp/index.js ingest_corpus --args '{"file":"docs/sample.txt","meta":{"type":"note"}}'`
     - `node server/mcp/index.js query_corpus --args '{"q":"gross margin guidance"}'`
+
+### EDGAR ingestion (no API key)
+- Requires a polite `SEC_USER_AGENT` string per SEC guidance. Add to `.env`, for example:
+  - `SEC_USER_AGENT=fin-agent-proto (contact: youremail@example.com)`
+- Fetch and ingest latest filing for a symbol:
+```
+node server/mcp/index.js fetch_edgar_and_ingest --args '{"symbol":"AAPL","forms":["10-K","10-Q"],"limit":1}'
+```
+The text is cached under `rag/cache/` and chunked into the local RAG store.
 - Configure env vars for live providers (optional):
   - `ALPHA_VANTAGE_KEY` for `get_quotes` with `source=alpha_vantage`
   - `NEWSAPI_KEY` for `search_news` with `source=newsapi`

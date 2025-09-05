@@ -2,6 +2,7 @@ const path = require('path');
 const { loadLocalPortfolio } = require('../../src/providers/portfolio/local');
 const { loadLocalPrices } = require('../../src/providers/quotes/local');
 const { ingestFile, ingestText, query: ragQuery } = require('../rag');
+const { fetchAndIngestEdgar } = require('../ingest/edgar');
 
 function nowIso() { return new Date().toISOString(); }
 
@@ -155,6 +156,19 @@ async function query_corpus(args = {}) {
   }
 }
 
+// fetch_edgar_and_ingest({ symbol, forms?, limit? })
+async function fetch_edgar_and_ingest(args = {}) {
+  try {
+    const symbol = args.symbol || 'AAPL';
+    const forms = Array.isArray(args.forms) ? args.forms : ['10-K','10-Q','8-K'];
+    const limit = args.limit || 1;
+    const res = await fetchAndIngestEdgar({ symbol, forms, limit });
+    return ok('edgar', res);
+  } catch (e) {
+    return err('edgar', e.message);
+  }
+}
+
 module.exports = {
   get_portfolio,
   get_quotes,
@@ -162,5 +176,6 @@ module.exports = {
   get_filings,
   place_order,
   ingest_corpus,
-  query_corpus
+  query_corpus,
+  fetch_edgar_and_ingest
 };

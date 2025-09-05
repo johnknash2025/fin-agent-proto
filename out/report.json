@@ -45,6 +45,17 @@
         "pnl": 5120,
         "pnlPct": 0.2694736842105263
       }
+    ],
+    "highlights": [
+      {
+        "id": "863a593c",
+        "score": 0.08466675133346034,
+        "meta": {
+          "type": "note",
+          "file": "docs/sample.txt"
+        },
+        "snippet": "Apple reported strong quarterly results with revenue growth driven by services and wearables."
+      }
     ]
   },
   "suggestions": [

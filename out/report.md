@@ -13,6 +13,9 @@
 - NVDA: qty 40, price 880.5, value 35,220, PnL 18420 (109.64%)
 - VOO: qty 50, price 482.4, value 24,120, PnL 5120 (26.95%)
 
+## Research Highlights
+- Apple reported strong quarterly results with revenue growth driven by services and wearables.
+
 ## Suggestions
 
 - AAPL: +39.43% unrealized. Consider partial profit‑taking or trailing stops.

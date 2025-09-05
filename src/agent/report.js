@@ -38,14 +38,45 @@ function toMarkdown({ portfolioSummary, positions }) {
   return md;
 }
 
+function firstSentence(text, maxLen = 180) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  const end = t.search(/[.!?]\s|$/);
+  const s = end > 0 ? t.slice(0, end + 1) : t;
+  return s.length > maxLen ? s.slice(0, maxLen - 1) + '…' : s;
+}
+
+function tryGetRagHighlights(k = 3) {
+  try {
+    const { query } = require('../../server/rag');
+    const hits = query({ q: 'earnings guidance revenue margin outlook risk', k });
+    return hits.map(h => ({
+      id: h.id,
+      score: h.score,
+      meta: h.meta,
+      snippet: firstSentence(h.text)
+    }));
+  } catch {
+    return [];
+  }
+}
+
 function buildReport({ portfolio, prices }) {
   const { metrics, totalValue, totalCost, totalPnl, totalPnlPct, concentration } = computePortfolio({ portfolio, prices });
   const portfolioSummary = { totalValue, totalCost, totalPnl, totalPnlPct, concentration, cash: portfolio.cash || 0 };
 
-  const json = { portfolioSummary, positions: metrics };
+  const highlights = tryGetRagHighlights(3);
+
+  const json = { portfolioSummary, positions: metrics, highlights };
   const markdown = toMarkdown({ portfolioSummary, positions: metrics });
+  if (highlights.length) {
+    markdown.push('');
+    markdown.push('## Research Highlights');
+    highlights.forEach(h => {
+      const tag = [h.meta?.symbol, h.meta?.form, h.meta?.filed_at].filter(Boolean).join(' / ');
+      markdown.push(`- ${tag ? `[${tag}] ` : ''}${h.snippet}`);
+    });
+  }
   return { json, markdown };
 }
 
 module.exports = { buildReport };
-
