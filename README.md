@@ -31,6 +31,12 @@ node server/mcp/index.js get_quotes --args '{"symbols":["AAPL","MSFT"],"source":
 ```
 echo '{"tool":"get_portfolio","args":{"source":"local"}}' | node server/mcp/index.js stdio
 ```
+- RAG (local store):
+  - Ingest: `node server/rag/cli.js ingest --file docs/sample.txt --meta '{"type":"note"}'`
+  - Query: `node server/rag/cli.js query --q 'gross margin guidance' --k 3`
+  - Via MCP tools:
+    - `node server/mcp/index.js ingest_corpus --args '{"file":"docs/sample.txt","meta":{"type":"note"}}'`
+    - `node server/mcp/index.js query_corpus --args '{"q":"gross margin guidance"}'`
 - Configure env vars for live providers (optional):
   - `ALPHA_VANTAGE_KEY` for `get_quotes` with `source=alpha_vantage`
   - `NEWSAPI_KEY` for `search_news` with `source=newsapi`

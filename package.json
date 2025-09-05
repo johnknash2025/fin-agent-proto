@@ -9,11 +9,12 @@
   "scripts": {
     "report": "node src/cli.js --data data/portfolio.sample.json --prices data/prices.sample.json --out out",
     "mcp:stdio": "node server/mcp/index.js stdio",
-    "mcp:test": "node server/mcp/index.js get_quotes --args '{\"symbols\":[\"AAPL\",\"MSFT\"]}'"
+    "mcp:test": "node server/mcp/index.js get_quotes --args '{\"symbols\":[\"AAPL\",\"MSFT\"]}',",
+    "rag:ingest": "node server/rag/cli.js ingest --file docs/sample.txt --meta '{\"type\":\"note\"}'",
+    "rag:query": "node server/rag/cli.js query --q 'growth margin guidance' --k 5"
   },
   "dependencies": {},
   "engines": {
     "node": ">=18"
   }
 }
-

@@ -1,6 +1,7 @@
 const path = require('path');
 const { loadLocalPortfolio } = require('../../src/providers/portfolio/local');
 const { loadLocalPrices } = require('../../src/providers/quotes/local');
+const { ingestFile, ingestText, query: ragQuery } = require('../rag');
 
 function nowIso() { return new Date().toISOString(); }
 
@@ -107,11 +108,39 @@ async function place_order(args = {}) {
   return err('manual', 'Order placement requires explicit user approval');
 }
 
+// ingest_corpus({ text?, file?, meta? }) – local RAG store
+async function ingest_corpus(args = {}) {
+  try {
+    if (args.file) {
+      const res = ingestFile({ file: args.file, meta: args.meta || {} });
+      return ok('rag_local', res);
+    }
+    if (args.text) {
+      const res = ingestText({ text: args.text, meta: args.meta || {}, source: 'text' });
+      return ok('rag_local', res);
+    }
+    return err('rag_local', 'Must provide file or text');
+  } catch (e) {
+    return err('rag_local', e.message);
+  }
+}
+
+// query_corpus({ q, k }) – retrieve top-k chunks
+async function query_corpus(args = {}) {
+  try {
+    const hits = ragQuery({ q: args.q || '', k: args.k || 5 });
+    return ok('rag_local', { hits });
+  } catch (e) {
+    return err('rag_local', e.message);
+  }
+}
+
 module.exports = {
   get_portfolio,
   get_quotes,
   search_news,
   get_filings,
-  place_order
+  place_order,
+  ingest_corpus,
+  query_corpus
 };
-

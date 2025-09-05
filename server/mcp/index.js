@@ -2,9 +2,9 @@
 // Minimal stdio runner for tool functions.
 // This is not the official MCP server, but provides the same tool semantics for local testing.
 
-const { get_portfolio, get_quotes, search_news, get_filings, place_order } = require('./tools');
+const { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus } = require('./tools');
 
-const TOOL_MAP = { get_portfolio, get_quotes, search_news, get_filings, place_order };
+const TOOL_MAP = { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus };
 
 async function runOnce(toolName, args) {
   const fn = TOOL_MAP[toolName];
@@ -57,4 +57,3 @@ if (require.main === module) {
 }
 
 module.exports = { runOnce };
-
