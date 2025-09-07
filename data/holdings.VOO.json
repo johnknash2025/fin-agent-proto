@@ -1,0 +1,18 @@
+{
+  "symbol": "VOO",
+  "as_of": "sample",
+  "source": "sample",
+  "holdings": [
+    { "symbol": "AAPL", "name": "Apple Inc.", "weight": 7.0 },
+    { "symbol": "MSFT", "name": "Microsoft Corp.", "weight": 6.5 },
+    { "symbol": "NVDA", "name": "NVIDIA Corp.", "weight": 6.0 },
+    { "symbol": "AMZN", "name": "Amazon.com Inc.", "weight": 3.5 },
+    { "symbol": "GOOGL", "name": "Alphabet Inc. (A)", "weight": 2.1 },
+    { "symbol": "META", "name": "Meta Platforms Inc.", "weight": 2.0 },
+    { "symbol": "BRK.B", "name": "Berkshire Hathaway Inc. (B)", "weight": 1.8 },
+    { "symbol": "TSLA", "name": "Tesla Inc.", "weight": 1.5 },
+    { "symbol": "LLY", "name": "Eli Lilly and Co.", "weight": 1.4 },
+    { "symbol": "AVGO", "name": "Broadcom Inc.", "weight": 1.3 }
+  ]
+}
+

@@ -5,9 +5,9 @@
 // Load .env if present (no external deps)
 try { require('../env').config(); } catch {}
 
-const { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus, fetch_edgar_and_ingest } = require('./tools');
+const { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus, fetch_edgar_and_ingest, ingest_holdings, get_series } = require('./tools');
 
-const TOOL_MAP = { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus, fetch_edgar_and_ingest };
+const TOOL_MAP = { get_portfolio, get_quotes, search_news, get_filings, place_order, ingest_corpus, query_corpus, fetch_edgar_and_ingest, ingest_holdings, get_series };
 
 async function runOnce(toolName, args) {
   const fn = TOOL_MAP[toolName];

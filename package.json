@@ -13,7 +13,10 @@
     "rag:ingest": "node server/rag/cli.js ingest --file docs/sample.txt --meta '{\"type\":\"note\"}'",
     "rag:query": "node server/rag/cli.js query --q 'growth margin guidance' --k 5"
   },
-  "dependencies": {},
+  "dependencies": {
+    "iconv-lite": "^0.6.3",
+    "xlsx": "^0.18.5"
+  },
   "engines": {
     "node": ">=18"
   }

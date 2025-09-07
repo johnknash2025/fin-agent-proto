@@ -3,6 +3,7 @@ const { loadLocalPortfolio } = require('../../src/providers/portfolio/local');
 const { loadLocalPrices } = require('../../src/providers/quotes/local');
 const { ingestFile, ingestText, query: ragQuery } = require('../rag');
 const { fetchAndIngestEdgar } = require('../ingest/edgar');
+const { ingestHoldings } = require('../ingest/holdings.js');
 
 function nowIso() { return new Date().toISOString(); }
 
@@ -101,7 +102,13 @@ async function search_news(args = {}) {
     const key = process.env.NEWSAPI_KEY;
     if (!key) return err(source, 'Missing env NEWSAPI_KEY');
     const q = args.query || (Array.isArray(args.symbols) ? args.symbols.join(' OR ') : 'market');
-    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&pageSize=10&sortBy=publishedAt&apiKey=${key}`;
+    const params = new URLSearchParams({
+      q,
+      pageSize: String(args.pageSize || 10),
+      sortBy: args.sortBy || 'publishedAt'
+    });
+    if (args.language) params.set('language', args.language);
+    const url = `https://newsapi.org/v2/everything?${params.toString()}&apiKey=${key}`;
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -113,6 +120,57 @@ async function search_news(args = {}) {
     }
   }
   return err(source, `Unsupported news source: ${source}`);
+}
+
+// get_series({ symbol, source='alpha_vantage'|'local', interval='daily', outputsize='compact' })
+async function get_series(args = {}) {
+  const source = args.source || 'alpha_vantage';
+  const symbol = args.symbol;
+  if (!symbol) return err(source, 'Missing symbol');
+  if (source === 'alpha_vantage') {
+    const key = process.env.ALPHA_VANTAGE_KEY;
+    if (!key) return err(source, 'Missing env ALPHA_VANTAGE_KEY');
+    try {
+      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${encodeURIComponent(symbol)}&outputsize=${args.outputsize || 'compact'}&apikey=${key}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json['Note'] || json['Information'] || json['Error Message']) {
+        return err(source, json['Note'] || json['Information'] || json['Error Message']);
+      }
+      const series = json['Time Series (Daily)'] || {};
+      const points = Object.keys(series).sort().map(d => ({ t: d, c: parseFloat(series[d]['4. close']) }));
+      return ok(source, { symbol, points });
+    } catch (e) {
+      return err(source, `Fetch failed: ${e.message}`);
+    }
+  }
+  if (source === 'local') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const p = path.join(process.cwd(), 'data', `series.${symbol}.json`);
+      const txt = fs.readFileSync(p, 'utf8');
+      const json = JSON.parse(txt);
+      return ok(source, { symbol, points: json.points || [] });
+    } catch (e) {
+      return err(source, e.message);
+    }
+  }
+  return err(source, `Unsupported series source: ${source}`);
+}
+
+// ingest_holdings({ symbol, url?, file? }) -> writes data/holdings.<symbol>.json
+async function ingest_holdings(args = {}) {
+  try {
+    const symbol = args.symbol;
+    const url = args.url;
+    const file = args.file;
+    const res = await ingestHoldings({ symbol, url, file });
+    return ok('holdings', res);
+  } catch (e) {
+    return err('holdings', e.message);
+  }
 }
 
 // get_filings({ symbol, source='local' })
@@ -177,5 +235,7 @@ module.exports = {
   place_order,
   ingest_corpus,
   query_corpus,
-  fetch_edgar_and_ingest
+  fetch_edgar_and_ingest,
+  get_series,
+  ingest_holdings
 };
