@@ -2,18 +2,13 @@ name = "fin-agent-worker"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
 
-# TODO: fill these with your account details before deploy
 # account_id = "YOUR_ACCOUNT_ID"
-
-# Optional route if you bind to a custom domain
-# routes = [
-#   { pattern = "your-domain.example.com", custom_domain = true }
-# ]
 
 [vars]
 # NEWSAPI_KEY = ""
 # ALPHA_VANTAGE_KEY = ""
 # SEC_USER_AGENT = "fin-agent (contact: you@example.com)"
+# SERIES_DEFAULT = "VOO,SPY,QQQ,AAPL,MSFT,NVDA,AMZN"
 
 [[kv_namespaces]]
 binding = "NEWS_CACHE"
@@ -35,5 +30,14 @@ binding = "R2"
 bucket_name = "fin-agent"
 # jurisdiction = "auto"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "fin-agent-dev"
+database_id = "11111111-1111-1111-1111-111111111111"
+
 [assets]
-directory = "../ui"
+directory = "../../ui"
+
+[triggers]
+# Run once daily at 09:00 UTC (example). Adjust as needed.
+crons = ["0 9 * * *"]

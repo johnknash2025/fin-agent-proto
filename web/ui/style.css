@@ -1,0 +1,42 @@
+:root{
+  --bg:#0b0f10; --fg:#e6edf3; --muted:#9aa5b1; --card:#11161a; --acc:#38bdf8; --border:#1f2a33;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0; padding:0; background:var(--bg); color:var(--fg); font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif}
+header{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border); background:#0d1317; position:sticky; top:0}
+h1{margin:0; font-size:16px}
+nav button{margin-left:8px}
+main{max-width:900px; margin:24px auto; padding:0 16px; display:grid; grid-template-columns:1fr; gap:16px}
+.card{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px}
+.hero-title{font-size:20px; margin-bottom:8px}
+.steps{margin:8px 0 12px 0; padding-left:0}
+.steps li{list-style:none; margin:6px 0}
+.step-badge{display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; background:#163141; border:1px solid var(--border); border-radius:50%; margin-right:6px}
+.hero-actions{display:flex; gap:8px; margin-top:8px}
+.row{margin:8px 0; display:flex; gap:8px; align-items:center}
+.row.wrap{flex-wrap:wrap}
+label{color:var(--muted)}
+input[type=text]{flex:1; padding:8px; border-radius:6px; border:1px solid var(--border); background:#0c1215; color:var(--fg)}
+button{padding:8px 12px; border-radius:6px; border:1px solid var(--border); background:#0f1620; color:var(--fg); cursor:pointer}
+button:hover{border-color:#2b3845}
+button.primary{background:#0f1f2a; border-color:#2b3845}
+button.ghost{background:transparent}
+.mono{font-family:var(--mono); white-space:pre-wrap; background:#0a0f13; border:1px solid var(--border); border-radius:6px; padding:12px; max-height:420px; overflow:auto}
+footer{max-width:900px; margin:0 auto 24px; padding:0 16px; color:var(--muted)}
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+.chip{padding:6px 10px; background:#12202a; border:1px solid var(--border); border-radius:999px; cursor:pointer}
+.chip.sel{background:#163141}
+.label{margin-top:8px; color:var(--muted); font-size:12px}
+.panels{display:grid; grid-template-columns:1fr; gap:12px}
+.panel{border:1px solid var(--border); border-radius:8px; padding:12px}
+.panel h3{margin:0 0 8px 0}
+canvas.chart{display:block; width:100%; height:120px; background:#0a0f13; border:1px solid var(--border); border-radius:6px}
+.tvbox{width:100%; height:320px; background:#0a0f13; border:1px solid var(--border); border-radius:6px; margin-top:8px}
+.md{background:#0a0f13; border:1px solid var(--border); border-radius:8px; padding:12px}
+.md h2{margin:12px 0 8px}
+.md ul{margin:0 0 8px 16px}
+.news{list-style:none; padding:0; margin:0}
+.news li{margin:6px 0}
+.hint{color:var(--muted); font-size:12px; font-weight:normal}
+.empty-state::before{content:attr(data-empty-text); display:block; color:var(--muted); padding:8px; border:1px dashed var(--border); border-radius:6px}

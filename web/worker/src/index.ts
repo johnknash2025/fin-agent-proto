@@ -14,6 +14,7 @@ type Env = {
   NEWSAPI_KEY?: string;
   ALPHA_VANTAGE_KEY?: string;
   SEC_USER_AGENT?: string;
+  ASSETS: Fetcher;
 };
 
 function jsonResponse(data: unknown, init: ResponseInit = {}) {
@@ -67,6 +68,37 @@ async function handleSeries(env: Env, symbol: string) {
   const cached = await env.SERIES_CACHE.get(`series:${symbol}`, 'json');
   if (cached) return jsonResponse({ ok: true, data: cached });
   return notFound(`series not found: ${symbol}`);
+}
+
+async function handleSymbols(env: Env) {
+  // list R2 under series/ and holdings/
+  const series = await env.R2.list({ prefix: 'series/' });
+  const holdings = await env.R2.list({ prefix: 'holdings/' });
+  const s = new Set<string>();
+  for (const it of series.objects || []) {
+    const key = it.key || '';
+    const sym = key.replace(/^series\//, '').replace(/\.json$/i, '').trim();
+    if (sym) s.add(sym);
+  }
+  for (const it of holdings.objects || []) {
+    const key = it.key || '';
+    const sym = key.replace(/^holdings\//, '').replace(/\.json$/i, '').trim();
+    if (sym) s.add(sym);
+  }
+  return jsonResponse({ ok: true, symbols: Array.from(s).sort() });
+}
+
+async function handleUpload(env: Env, req: Request) {
+  // Dev-only helper: write JSON body to R2
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== 'object') return badRequest('json body required');
+  const type = (body as any).type === 'holdings' ? 'holdings' : 'series';
+  const symbol = String((body as any).symbol || '').trim();
+  const data = (body as any).data;
+  if (!symbol || !data) return badRequest('symbol and data required');
+  const key = `${type}/${symbol}.json`;
+  await env.R2.put(key, JSON.stringify(data), { httpMetadata: { contentType: 'application/json' } });
+  return jsonResponse({ ok: true, key });
 }
 
 async function handleNews(env: Env, q: string, lang?: string) {
@@ -141,6 +173,12 @@ export default {
       if (!q) return badRequest('q required');
       return handleNews(env, q, lang);
     }
+    if (pathname === '/api/symbols') {
+      return handleSymbols(env);
+    }
+    if (pathname === '/api/upload' && req.method === 'POST') {
+      return handleUpload(env, req);
+    }
     // Report (POST)
     if (pathname === '/api/report' && req.method === 'POST') {
       // Parse options
@@ -192,7 +230,7 @@ export default {
       return jsonResponse({ ok: true, markdown: mdLines.join('\n'), etfItems });
     }
 
-    return notFound();
+    // Fall back to static assets (UI)
+    return env.ASSETS.fetch(req);
   }
 };
-

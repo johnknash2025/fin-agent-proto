@@ -11,7 +11,9 @@
     "mcp:stdio": "node server/mcp/index.js stdio",
     "mcp:test": "node server/mcp/index.js get_quotes --args '{\"symbols\":[\"AAPL\",\"MSFT\"]}',",
     "rag:ingest": "node server/rag/cli.js ingest --file docs/sample.txt --meta '{\"type\":\"note\"}'",
-    "rag:query": "node server/rag/cli.js query --q 'growth margin guidance' --k 5"
+    "rag:query": "node server/rag/cli.js query --q 'growth margin guidance' --k 5",
+    "web:dev": "npm exec -- wrangler --config web/worker/wrangler.toml dev",
+    "web:seed": "npm exec -- wrangler --config web/worker/wrangler.toml r2 bucket create fin-agent --local; npm exec -- wrangler --config web/worker/wrangler.toml r2 object put fin-agent/series/VOO.json --file data/series.VOO.json --local; npm exec -- wrangler --config web/worker/wrangler.toml r2 object put fin-agent/holdings/VOO.json --file data/holdings.VOO.json --local"
   },
   "dependencies": {
     "iconv-lite": "^0.6.3",

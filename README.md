@@ -1,78 +1,67 @@
-# Finance Agent Prototype (Offline, MCP/RAG‑Ready)
+# 🤖 Finance Agent Prototype
 
-This is a minimal, dependency‑free prototype for a finance agent that:
-- Loads a mock portfolio and prices (offline) 
-- Generates a concise daily report (Markdown + JSON)
-- Emits simple buy/sell/hold suggestions based on rules
-- Provides clear extension points for MCP tools and RAG ingestion
+Offline finance agent with MCP/RAG-ready architecture. Generates daily portfolio reports and buy/sell/hold suggestions.
 
-No packages are required; it runs with plain Node.js (v18+).
+## 🚀 Features
 
-## Quick Start
+- **Offline-first** — Works without internet connection using local data
+- **MCP Tools** — Portfolio, quotes, news, filings, and order tools
+- **RAG Support** — Local vector store for document ingestion and querying
+- **EDGAR Integration** — Fetch SEC filings automatically
+- **Rule-based Engine** — Simple buy/sell/hold suggestions
+- **Zero Dependencies** — Runs with plain Node.js (v18+)
 
-- Run with bundled sample data
-```
+## 🛠 Quick Start
+
+```bash
 node src/cli.js --data data/portfolio.sample.json --prices data/prices.sample.json --out out
 ```
-- Outputs:
-  - `out/report.md` – human‑readable daily report
-  - `out/report.json` – structured metrics and suggestions
 
-## MCP Minimal Tools (Local Stub)
+**Outputs:**
+- `out/report.md` — Human-readable daily report
+- `out/report.json` — Structured metrics and suggestions
 
-This repo includes minimal MCP‑style tools and a stdio runner (no extra deps). These will be wired to the official MCP SDK later.
+## 📦 MCP Tools
 
-- List of tools: `get_portfolio`, `get_quotes`, `search_news`, `get_filings`, `place_order`
-- Run (one‑shot):
-```
-node server/mcp/index.js get_quotes --args '{"symbols":["AAPL","MSFT"],"source":"local"}'
-```
-- Run (stdio):
-```
-echo '{"tool":"get_portfolio","args":{"source":"local"}}' | node server/mcp/index.js stdio
-```
-- RAG (local store):
-  - Ingest: `node server/rag/cli.js ingest --file docs/sample.txt --meta '{"type":"note"}'`
-  - Query: `node server/rag/cli.js query --q 'gross margin guidance' --k 3`
-  - Via MCP tools:
-    - `node server/mcp/index.js ingest_corpus --args '{"file":"docs/sample.txt","meta":{"type":"note"}}'`
-    - `node server/mcp/index.js query_corpus --args '{"q":"gross margin guidance"}'`
+| Tool | Description |
+|---|---|
+| `get_portfolio` | Load portfolio data |
+| `get_quotes` | Fetch stock quotes |
+| `search_news` | Search financial news |
+| `get_filings` | Fetch SEC filings |
+| `place_order` | Execute orders (guarded) |
 
-### EDGAR ingestion (no API key)
-- Requires a polite `SEC_USER_AGENT` string per SEC guidance. Add to `.env`, for example:
-  - `SEC_USER_AGENT=fin-agent-proto (contact: youremail@example.com)`
-- Fetch and ingest latest filing for a symbol:
-```
+### EDGAR Ingestion
+
+```bash
 node server/mcp/index.js fetch_edgar_and_ingest --args '{"symbol":"AAPL","forms":["10-K","10-Q"],"limit":1}'
 ```
-The text is cached under `rag/cache/` and chunked into the local RAG store.
-- Configure env vars for live providers (optional):
-  - `ALPHA_VANTAGE_KEY` for `get_quotes` with `source=alpha_vantage`
-  - `NEWSAPI_KEY` for `search_news` with `source=newsapi`
-  - `PORTFOLIO_JSON` / `PRICES_JSON` to override local files
 
-### .env support
-- Place a `.env` file in the repo root (see `.env.example`).
-- The MCP stdio runner auto-loads `.env` via `server/env.js` (no external deps).
+## 📁 Project Structure
 
-To replace the stub with the official MCP SDK, add `@modelcontextprotocol/sdk` and wrap the tool functions in a real MCP server. The tool contracts here are stable and intended for direct reuse.
+```
+fin-agent-proto/
+├── src/
+│   ├── cli.js          # CLI entry point
+│   └── agent/          # Report generation & recommendations
+├── server/
+│   ├── mcp/            # MCP tools
+│   └── rag/            # RAG ingestion & query
+├── data/               # Sample portfolio & price data
+├── docs/               # Architecture & schema docs
+└── rag/                # Local RAG cache
+```
 
-## Project Layout
-- `src/cli.js` – CLI entry
-- `src/agent/report.js` – metrics + report generation
-- `src/agent/recommend.js` – rule‑based suggestions
-- `src/providers/portfolio/local.js` – load local portfolio JSON
-- `src/providers/quotes/local.js` – load local prices JSON/series
-- `data/*.sample.json` – sample inputs
-- `docs/ARCHITECTURE.md` – target architecture with MCP/RAG
-- `docs/SCHEMAS.md` – data shapes (JSON)
+## 🔧 Configuration
 
-## Roadmap
-- Add MCP server exposing tools:
-  - `get_portfolio`, `get_quotes`, `search_news`, `get_filings`, `place_order` (guarded)
-- Swap local providers with live connectors (broker/data vendors)
-- Add RAG ingestion (EDGAR/EDINET, news RSS, analyst notes) + embeddings
-- Replace rule engine with LLM+Graph policy (manual approval for orders)
+Set environment variables in `.env`:
 
-## Disclaimer
-This prototype is for engineering exploration only and is not financial advice. Any trading integration must include explicit user approval, logging, and compliance checks.
+```
+SEC_USER_AGENT=your-agent-string
+ALPHA_VANTAGE_KEY=your-key
+NEWSAPI_KEY=your-key
+```
+
+## 📄 License
+
+MIT License
